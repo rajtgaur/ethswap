@@ -61,12 +61,11 @@ class App extends Component {
     this.state.ethSwap.methods.buyTokens().send({ value: etherAmount, from: this.state.account })
     .on('transactionHash', (hash) => {
       this.setState({ loading: false })
-      window.location.reload()
     })
     .on('confirmation', (confirmationNumber, receipt) => {
       if(confirmationNumber.toString() === '3') {
-      window.location.reload()
-    }
+        window.location.reload()
+      }
     })
     .on('error', (error) => {
       console.log(error)
@@ -84,8 +83,8 @@ class App extends Component {
       })
       .on('confirmation', (confirmationNumber, receipt) => {
         if(confirmationNumber.toString() === '3') {
-        window.location.reload()
-      }
+          window.location.reload()
+        }
       })
       .on('error', (error) => {
         console.log(error)
