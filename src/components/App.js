@@ -43,6 +43,7 @@ class App extends Component {
     }
 
     this.setState({ loading: false })
+    this.setState({ wait: false })
   }
 
   async loadWeb3() {
@@ -61,6 +62,7 @@ class App extends Component {
     this.state.ethSwap.methods.buyTokens().send({ value: etherAmount, from: this.state.account })
     .on('transactionHash', (hash) => {
       this.setState({ loading: false })
+      this.setState({ wait: true })
     })
     .on('confirmation', (confirmationNumber, receipt) => {
       if(confirmationNumber.toString() === '3') {
@@ -70,6 +72,7 @@ class App extends Component {
     .on('error', (error) => {
       console.log(error)
       window.alert(`There was an error!`)
+      window.location.reload()
     })
   }
 
@@ -80,6 +83,7 @@ class App extends Component {
       this.state.ethSwap.methods.sellTokens(tokenAmount).send({ from: this.state.account })
       .on('transactionHash', (hash) => {
         this.setState({ loading: false })
+        this.setState({ wait: true })
       })
       .on('confirmation', (confirmationNumber, receipt) => {
         if(confirmationNumber.toString() === '3') {
@@ -89,6 +93,7 @@ class App extends Component {
       .on('error', (error) => {
         console.log(error)
         window.alert(`There was an error!`)
+        window.location.reload()
       })
     })
   }
@@ -101,7 +106,8 @@ class App extends Component {
       ethSwap: {},
       ethBalance: '0',
       tokenBalance: '0',
-      loading: true
+      loading: true,
+      wait: true,
     }
   }
 
@@ -109,6 +115,8 @@ class App extends Component {
     let content
     if(this.state.loading) {
       content = <p id="loader" className="text-center">Loading...</p>
+    } else if(this.state.wait) {
+      content = <p id="loader" className="text-center">Waiting for the transaction to complete...</p>
     } else {
       content = <Main
       ethBalance={this.state.ethBalance}
